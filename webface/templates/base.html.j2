@@ -49,27 +49,23 @@
 
 <form method="post">
 <p class="url">URL pro zkrácení<br>
-<input type="text" size="120%" name="ulr" id="url" />
+<input type="text" size="120%" name="url" id="url" />
 <input type="submit" value="Zkrátit"/>
-</form>
 </p>
+</form>
 
 {% if shortcut %}
-  <p class="shortcut">Zkratka: <a href="/{{shortcut}}">{{shortcut}}</a></p>
+  <p class="shortcut">Zkratka: <a href="{{ url_for('shortcut_get', shortcut=shortcut) }}">{{request.root_url + shortcut}}</a></p>
 {% endif %}
 
+{% if "nick" in session and addresses %}
+  {%for addr in addresses%}
+    {{addr.shortcut}}
+    {{addr.url}}<br>
+  {%endfor%}
+{%endif%}
+
 {{ temp }}
-
-{#{% filter markdown %}#}
-
-# Flask
-
-Startovací šablona pro webový framework Flask.
-
-![Flaštička]({{ url_for('static', filename='flask.png') }})
-![Flaštičky]({{ url_for('static', filename='flasks.png') }})
-
-{#{% endfilter %}#}
 
 
 

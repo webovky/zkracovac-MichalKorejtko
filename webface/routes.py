@@ -25,29 +25,34 @@ def prihlasit(function):
 @db_session
 def index():
     shortcut= request.args.get("shortcut")
-    if shortcut and Addresses.get(shortcut=shortcut):
-        pass
+    if shortcut and (url:= Addresses.get(shortcut=shortcut).url):
+        print(url)
     else:
-        shortcut=None
-    return render_template("base.html.j2")
+        url,shortcut=None,None
+    if "nick" in session:
+        user= User.get(nick=session["nick"])
+        addresses=Addresses.select(lambda a: a.user==user)
+
+    return render_template("base.html.j2", url=url, shortcut=shortcut, addresses=list(addresses))
 
 @app.route("/", methods=["POST"])
 @db_session
 def index_post():
     url= request.form.get("url")
     if url:
-        shortcut= "".join([random.choise(string.ascii_letter)for i in range(7)])
+        shortcut= "".join([random.choice(string.ascii_letters)for i in range(7)])
         address= Addresses.get(shortcut=shortcut)
         while address is not None:
-            shortcut: "".join([random.choise(string.ascii_letter)for i in range(7)])
+            shortcut= "".join([random.choice(string.ascii_letters)for i in range(7)])
             address= Addresses.get(shortcut=shortcut)
+
         if "nick" in session:
             address=Addresses(url=url, shortcut=shortcut, user=User.get(nick=session["nick"]))
         else:
             address=Addresses(url=url, shortcut=shortcut) 
         return redirect(url_for("index",shortcut=shortcut))
     else:
-        return redirect(ulr_for("index",shortcut=shortcut))
+        return redirect(url_for("index"))
 
 @app.route("/<path:shortcut>/",methods=["GET"])
 @db_session
