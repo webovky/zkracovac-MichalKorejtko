@@ -32,9 +32,9 @@ def index():
     if "nick" in session:
         user= User.get(nick=session["nick"])
         addresses=Addresses.select(lambda a: a.user==user)
-
-    return render_template("base.html.j2", url=url, shortcut=shortcut, addresses=list(addresses))
-
+        return render_template("base.html.j2", url=url, shortcut=shortcut, addresses=list(addresses))
+    return render_template("base.html.j2", url=url, shortcut=shortcut)
+    
 @app.route("/", methods=["POST"])
 @db_session
 def index_post():
