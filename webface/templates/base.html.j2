@@ -59,10 +59,21 @@
 {% endif %}
 
 {% if "nick" in session and addresses %}
+  <h2>Historie zkratek: </h2>
+  <table>
   {%for addr in addresses%}
-    {{addr.shortcut}}
-    {{addr.url}}<br>
+    <tr>
+      <td><a href= {{addr.shortcut}}>{{addr.shortcut}}</td>
+      <td><a href= {{addr.url}}>{{addr.url}}</td>
+      <td>
+        <form action="{{ url_for('remove_post') }}" method="post">
+          <input type="hidden" name="rmid" value="{{addr.id}}">
+          <input type="submit" name="rmbtn" value="Smazat">
+      </td>
+    </tr>
+
   {%endfor%}
+  </table>
 {%endif%}
 
 {{ temp }}

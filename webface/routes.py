@@ -62,6 +62,16 @@ def shortcut_get(shortcut):
     else:
         return redirect(url_for("index"))
 
+@app.route("/remove", methods=["POST"])
+@db_session
+def remove_post():
+    if "nick" in session:
+        rmid= request.form.get("rmid")
+        user= User.get(nick=session['nick'])
+        addr= Addresses.get(id=int(rmid), user=user)
+        if addr:
+            addr.delete()
+    return redirect(url_for("index"))
 
 @app.route("/add/", methods=["GET"])
 def add():
